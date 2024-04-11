@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Sprintify - Scrum Management Tool
 
-## Getting Started
+## Overview
 
-First, run the development server:
+This project is a Scrum management tool built using Next.js 14, TypeScript (TSX), Tailwind CSS, and React Server Components. It provides a platform for teams to manage their projects, sprints, tasks, backlogs, and users efficiently.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Projects:** Manage projects and their associated sprints.
+- **Sprints:** Create, update, and delete sprints within projects.
+- **Tasks:** Track tasks associated with sprints.
+- **Backlogs:** Maintain a backlog of tasks for each project.
+- **Users:** Manage users and their roles within projects.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Technologies Used
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- **Next.js 14:** A React framework for building server-side rendered and statically generated applications.
+- **TypeScript (TSX):** A typed superset of JavaScript that helps in writing safer and more maintainable code.
+- **Tailwind CSS:** A utility-first CSS framework for creating custom designs with ease.
+- **React Server Components:** Server-rendered React components for improved performance and interactivity.
 
-## Learn More
+Getting Started
+---------------
 
-To learn more about Next.js, take a look at the following resources:
+### Prerequisites
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+-   Node.js installed on your machine
+-   MongoDB database setup
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### Installation
 
-## Deploy on Vercel
+- Clone the repository:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+  `git clone <repository_url>`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Navigate to the project directory:
+
+  `cd scrum-management-tool`
+
+- Install dependencies:
+
+  `npm install`
+
+
+- Set up environment variables:
+
+  1. Create a .env file in the root directory 
+  2. Add MongoDB connection string
+
+ 
+  `MONGODB_URI=your_mongodb_connection_string`
+
+
+- Run the development server:
+
+  `npm run dev`
+
+- Access the application:
+
+  Open your browser and go to `http://localhost:3000` to view the application.
+
+Contributing
+------------
+
+Contributions are welcome! Feel free to open issues or pull requests for any improvements or bug fixes.
+
+License
+-------
+
+This project is licensed under the MIT License - see the LICENSE file for details.
