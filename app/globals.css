@@ -9,7 +9,7 @@
     --popover-foreground: 210 0% 12%;
     --primary-foreground: 210 100% 98%;
     --accent-foreground: 210 0% 100%;
-    --muted-foreground: 210 20% 20%;
+    --muted-foreground: 227 10% 34%;
     --card-foreground: 210 20% 20%;
     --destructive: 0 100% 35%;
     --background: 210 0% 97%;
@@ -42,6 +42,26 @@
 }
 
 html {
-  font-size: 1.25vmax;
+  font-size: clamp(14px, 80%, 1.1vmax);
   scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--background) transparent;
+}
+html::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+html::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 4px;
+}
+
+html::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 4px;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  background: #555555;
 }

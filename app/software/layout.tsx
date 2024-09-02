@@ -3,8 +3,8 @@ import "@/app/globals.css";
 import { Bricolage_Grotesque } from "next/font/google";
 import { Inter } from "next/font/google";
 import { cn } from "@/app/lib/utils";
-import { cookies } from "next/headers";
-import { redirect, useRouter } from "next/navigation";
+import Header from "@/components/Header";
+import Nav from "@/components/Nav";
 
 const fontHeading = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -28,13 +28,18 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-
   return (
     <html lang="en">
       <body
         className={cn("antialiased", fontHeading.variable, fontBody.variable)}
       >
-        {children}
+          <Header />
+          <Nav />
+          <main className="flex min-h-screen w-full flex-col">
+            <div className="flex flex-col sm:gap-4 p-4 sm:pl-20 sm:px-6 sm:py-0">
+              {children}
+            </div>
+          </main>
       </body>
     </html>
   );

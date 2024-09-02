@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
-import {MenuIcon, PackageIcon, LayoutDashboardIcon, KanbanIcon, TeamIcon, SettingsIcon, SearchIcon } from '@/components/icons'
+import {MenuIcon, PackageIcon, LayoutDashboardIcon, KanbanIcon, TeamIcon, SettingsIcon, SearchIcon } from '@/components/ui/icons'
 
 export default function NavSheet() {
     return (
