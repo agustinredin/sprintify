@@ -28,4 +28,3 @@ export async function decrypt(session: string) {
     return null
   }
 }
-

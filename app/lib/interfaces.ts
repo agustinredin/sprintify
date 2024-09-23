@@ -10,3 +10,10 @@ export interface IUser {
     email: string,
     password: string
 }
+
+export interface IEmail {
+    from: string,
+    to: string | Array<string>,
+    subject: string,
+    body: React.ReactNode | string
+}

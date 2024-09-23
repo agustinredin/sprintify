@@ -166,6 +166,44 @@ export default function Dashboard() {
             </div>
           </CardContent>
         </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Sprint Velocity</CardTitle>
+            <CardDescription>Average story points completed per sprint</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className='text-3xl font-bold'>24</div>
+            <p className='text-sm text-muted-foreground'>+2 from last sprint</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Team Workload</CardTitle>
+            <CardDescription>Current task distribution</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className='space-y-2'>
+              <div className='flex items-center'>
+                <div className='w-24 text-sm'>Alice</div>
+                <div className='w-full bg-muted rounded-full h-2'>
+                  <div className='bg-blue-600 h-2 rounded-full' style={{ width: "70%" }}></div>
+                </div>
+              </div>
+              <div className='flex items-center'>
+                <div className='w-24 text-sm'>Bob</div>
+                <div className='w-full bg-muted rounded-full h-2'>
+                  <div className='bg-blue-600 h-2 rounded-full' style={{ width: "45%" }}></div>
+                </div>
+              </div>
+              <div className='flex items-center'>
+                <div className='w-24 text-sm'>Charlie</div>
+                <div className='w-full bg-muted rounded-full h-2'>
+                  <div className='bg-blue-600 h-2 rounded-full' style={{ width: "90%" }}></div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
       <div className='grid lg:col-span-1 gap-4 md:gap-12'>
         <Card>
@@ -201,16 +239,6 @@ export default function Dashboard() {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Sprint Velocity</CardTitle>
-            <CardDescription>Average story points completed per sprint</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className='text-3xl font-bold'>24</div>
-            <p className='text-sm text-muted-foreground'>+2 from last sprint</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
             <CardTitle>Burndown Chart</CardTitle>
             <CardDescription>Sprint progress over time</CardDescription>
           </CardHeader>
@@ -218,35 +246,6 @@ export default function Dashboard() {
             {/* You can replace this with an actual chart component */}
             <div className='h-[200px] bg-muted rounded-md flex items-center justify-center'>
               [Burndown Chart Placeholder]
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Team Workload</CardTitle>
-            <CardDescription>Current task distribution</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className='space-y-2'>
-              <div className='flex items-center'>
-                <div className='w-24 text-sm'>Alice</div>
-                <div className='w-full bg-muted rounded-full h-2'>
-                  <div className='bg-blue-600 h-2 rounded-full' style={{ width: "70%" }}></div>
-                </div>
-              </div>
-              <div className='flex items-center'>
-                <div className='w-24 text-sm'>Bob</div>
-                <div className='w-full bg-muted rounded-full h-2'>
-                  <div className='bg-blue-600 h-2 rounded-full' style={{ width: "45%" }}></div>
-                </div>
-              </div>
-              <div className='flex items-center'>
-                <div className='w-24 text-sm'>Charlie</div>
-                <div className='w-full bg-muted rounded-full h-2'>
-                  <div className='bg-blue-600 h-2 rounded-full' style={{ width: "90%" }}></div>
-                </div>
-              </div>
             </div>
           </CardContent>
         </Card>

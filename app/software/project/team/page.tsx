@@ -6,6 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button"
 import { Card } from '@/components/ui/card'
 import { ChevronDown, ChevronUp, Edit, Trash2 } from "lucide-react"
+import { getUserById } from '@/app/actions/userActions'
 
 export default function Component() {
   const [sortColumn, setSortColumn] = useState('clientName')
@@ -15,8 +16,9 @@ export default function Component() {
     { id: 1, name: 'Ralph Edwards', country: 'England', email: 'ralph@gmail.com', projectName: 'Task Management', projectType: 'Mobile App', taskProgress: 80, status: 'Completed', date: '15/08/2023' },
     { id: 2, name: 'Courtney Henry', country: 'Germany', email: 'courtney@gmail.com', projectName: 'Marketplace', projectType: 'Web App', taskProgress: 60, status: 'In Progress', date: '16/08/2023' },
     { id: 3, name: 'Cameron Williamson', country: 'United States', email: 'cameron@gmail.com', projectName: 'Crypto', projectType: 'Dashboard', taskProgress: 30, status: 'On Hold', date: '07/05/2023' },
-    // Add more team members here...
   ]
+
+  // teamMembers = http://localhost:3000/software/project/team
 
   const sortedMembers = [...teamMembers].sort((a : any, b : any) => {
     if (a[sortColumn] < b[sortColumn]) return sortDirection === 'asc' ? -1 : 1

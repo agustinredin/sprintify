@@ -1,5 +1,4 @@
 "use client"
-
 import { useState } from "react"
 import { useFormState, useFormStatus } from "react-dom"
 import { Button } from "@/components/ui/button"
@@ -9,8 +8,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import Link from "next/link"
 import { SprintifyIcon } from "@/components/ui/icons"
 import { loginUser, createUser, verifyUserSession } from "../actions/userActions"
-import { useRouter } from "next/navigation"
-import { cookies } from "next/headers"
+import { redirect, useRouter } from "next/navigation"
 
 export default function Component() {
     
@@ -24,7 +22,9 @@ export default function Component() {
             }
         }
 
-        setTimeout(() => router.push("/software"), 1500)
+        setTimeout(() =>{
+            router.push('/software')
+        }, 1500)
 
         return {
             success: "Logged in successfully. Redirecting...",

@@ -19,11 +19,14 @@ import {
 } from "@/components/ui/icons"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { lastPathFromURL } from "@/app/lib/utils"
+import { lastPathFromURL, sleep } from "@/app/lib/utils"
+import { FormEvent, useState } from "react"
+import Spinner from "@/components/ui/spinner"
+import { sendEmail } from "./actions/emailActions"
+import { IEmail } from "./lib/interfaces"
 
 export default function Page() {
   const params = usePathname()
-  console.log(params)
   if (params != null) {
     if (lastPathFromURL(params) != "") scroll(lastPathFromURL(params))
   }
@@ -40,6 +43,69 @@ export default function Page() {
     })
   }
 
+  const [loading, setLoading] = useState(false)
+  async function handleContactSubmit(e: FormEvent) {
+    setLoading(true)
+    e.preventDefault()
+
+    const errorClasses = [
+      "ring",
+      "ring-red-300",
+      "hover:ring",
+      "hover:ring-red-500",
+      "focus:ring",
+      "focus:ring-red-600",
+      "active:ring",
+      "active:ring-red-600",
+      "focus-visible:ring",
+      "focus-visible:ring-red-600",
+    ]
+
+    const formElements = {
+      name: document.getElementById("name") as HTMLInputElement,
+      email: document.getElementById("email") as HTMLInputElement,
+      message: document.getElementById("message") as HTMLInputElement,
+    }
+
+    ;(Object.values(formElements) as Array<HTMLInputElement>).map((element: HTMLInputElement) => {
+      element.classList.remove(...errorClasses)
+    })
+
+    let anyEmpty = (Object.values(formElements) as Array<HTMLInputElement>).filter(
+      (e) => !e || !e.value || e.value.length == 0,
+    )
+
+    anyEmpty.map((emptyElement: HTMLInputElement) => {
+      emptyElement.classList.add(...errorClasses)
+    })
+
+    if (anyEmpty.length) {
+      setLoading(false)
+      alert("Please complete all fields.")
+      return
+    }
+
+    let email: IEmail = {
+      from: "Acme <onboarding@resend.dev>",
+      to: ["agustintomasredin@gmail.com"],
+      subject: "Sprintify - Client Query",
+      body: `<b>Name: ${formElements.name.value}</b> 
+        <i>Email: ${formElements.email.value}</i>
+        <p>Message: ${formElements.message.value}</p>`,
+    }
+
+    const emailResponse = await sendEmail(email)
+
+    if (emailResponse?.error) {
+      console.log(emailResponse?.error)
+      alert("There has been an error submitting your query. Please try again.")
+    } else {
+      alert("Query submitted!")
+    }
+
+    setLoading(false)
+  }
+
   return (
     <div className='flex scroll-smooth flex-col min-h-[100dvh] container w-[90vw] md:w-[80vw] mx-auto'>
       <header className='py-10 h-14 flex items-center'>
@@ -48,7 +114,7 @@ export default function Page() {
           <h1 className='pl-2 text-3xl font-bold tracking-tight text-accent'>Sprintify</h1>
           <span className='sr-only'>Sprintify</span>
         </Link>
-        <nav className='ml-auto flex gap-4 sm:gap-6'>
+        <nav className='ml-auto items-center flex gap-4 sm:gap-6'>
           <span
             data-scroll='features'
             onClick={handleScroll}
@@ -73,6 +139,13 @@ export default function Page() {
             className='cursor-pointer text-lg font-medium hover:underline underline-offset-4'>
             Contact
           </span>
+          <Link 
+          href='/signup'
+          target='_blank'>
+            <Button variant='outline' size='lg'>
+              Log in
+            </Button>
+          </Link>
         </nav>
       </header>
       <main className='flex-1'>
@@ -92,7 +165,7 @@ export default function Page() {
                 <div className='flex flex-col gap-2 min-[400px]:flex-row'>
                   <Link
                     href='#'
-                    className='inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50'
+                    className='inline-flex h-10 items-center justify-center rounded-md bg-accent px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50'
                     prefetch={false}>
                     Get Started
                   </Link>
@@ -105,11 +178,11 @@ export default function Page() {
                 </div>
               </div>
               <Image
-                src='/placeholder.svg'
+                src='/hero.png'
                 width={550}
                 height={550}
                 alt='Hero'
-                className='mx-auto aspect-video overflow-hidden rounded-xl object-cover sm:w-full lg:order-last lg:aspect-square'
+                className='mx-auto overflow-hidden sm:w-full lg:order-last'
               />
             </div>
           </div>
@@ -126,7 +199,7 @@ export default function Page() {
             </div>
             <div className='mx-auto grid max-w-5xl grid-cols-1 gap-6 py-12 sm:grid-cols-2 md:grid-cols-3 lg:gap-12'>
               <div className='flex flex-col items-center justify-center space-y-4'>
-                <div className='rounded-full bg-primary p-4'>
+                <div className='rounded-full bg-accent p-4'>
                   <CircuitBoardIcon className='h-6 w-6 text-primary-foreground' />
                 </div>
                 <h3 className='text-lg font-bold'>Kanban Board</h3>
@@ -135,7 +208,7 @@ export default function Page() {
                 </p>
               </div>
               <div className='flex flex-col items-center justify-center space-y-4'>
-                <div className='rounded-full bg-primary p-4'>
+                <div className='rounded-full bg-accent p-4'>
                   <CalendarIcon className='h-6 w-6 text-primary-foreground' />
                 </div>
                 <h3 className='text-lg font-bold'>Sprint Planning</h3>
@@ -144,7 +217,7 @@ export default function Page() {
                 </p>
               </div>
               <div className='flex flex-col items-center justify-center space-y-4'>
-                <div className='rounded-full bg-primary p-4'>
+                <div className='rounded-full bg-accent p-4'>
                   <BarChartIcon className='h-6 w-6 text-primary-foreground' />
                 </div>
                 <h3 className='text-lg font-bold'>Reporting</h3>
@@ -153,7 +226,7 @@ export default function Page() {
                 </p>
               </div>
               <div className='flex flex-col items-center justify-center space-y-4'>
-                <div className='rounded-full bg-primary p-4'>
+                <div className='rounded-full bg-accent p-4'>
                   <UsersIcon className='h-6 w-6 text-primary-foreground' />
                 </div>
                 <h3 className='text-lg font-bold'>Team Collaboration</h3>
@@ -162,7 +235,7 @@ export default function Page() {
                 </p>
               </div>
               <div className='flex flex-col items-center justify-center space-y-4'>
-                <div className='rounded-full bg-primary p-4'>
+                <div className='rounded-full bg-accent p-4'>
                   <MailsIcon className='h-6 w-6 text-primary-foreground' />
                 </div>
                 <h3 className='text-lg font-bold'>Notifications</h3>
@@ -171,7 +244,7 @@ export default function Page() {
                 </p>
               </div>
               <div className='flex flex-col items-center justify-center space-y-4'>
-                <div className='rounded-full bg-primary p-4'>
+                <div className='rounded-full bg-accent p-4'>
                   <ImportIcon className='h-6 w-6 text-primary-foreground' />
                 </div>
                 <h3 className='text-lg font-bold'>Integrations</h3>
@@ -186,11 +259,11 @@ export default function Page() {
           <div className='container px-4 md:px-6'>
             <div className='grid gap-6 lg:grid-cols-2 lg:gap-12'>
               <Image
-                src='/placeholder.svg'
+                src='/why-sprintify.png'
                 width='550'
                 height='310'
                 alt='Why Choose Sprintify'
-                className='mx-auto aspect-square overflow-hidden rounded-xl object-cover object-center sm:w-full'
+                className='mx-auto overflow-hidden rounded-xl sm:w-full'
               />
               <div className='flex flex-col justify-start space-y-4'>
                 <div className='space-y-2'>
@@ -202,7 +275,7 @@ export default function Page() {
                 </div>
                 <ul className='grid gap-4'>
                   <li className='flex items-start gap-4'>
-                    <div className='rounded-full bg-primary p-3 flex items-center justify-center'>
+                    <div className='rounded-full bg-accent p-3 flex items-center justify-center'>
                       <CheckIcon className='h-5 w-5 text-primary-foreground' />
                     </div>
                     <div>
@@ -214,7 +287,7 @@ export default function Page() {
                     </div>
                   </li>
                   <li className='flex items-start gap-4'>
-                    <div className='rounded-full bg-primary p-3 flex items-center justify-center'>
+                    <div className='rounded-full bg-accent p-3 flex items-center justify-center'>
                       <RocketIcon className='h-5 w-5 text-primary-foreground' />
                     </div>
                     <div>
@@ -226,7 +299,7 @@ export default function Page() {
                     </div>
                   </li>
                   <li className='flex items-start gap-4'>
-                    <div className='rounded-full bg-primary p-3 flex items-center justify-center'>
+                    <div className='rounded-full bg-accent p-3 flex items-center justify-center'>
                       <BoltIcon className='h-5 w-5 text-primary-foreground' />
                     </div>
                     <div>
@@ -286,7 +359,7 @@ export default function Page() {
                         Advanced Integrations
                       </li>
                     </ul>
-                    <Button>Get Started</Button>
+                    <Button className='bg-accent'>Get Started</Button>
                   </div>
                 </CardContent>
               </Card>
@@ -323,7 +396,7 @@ export default function Page() {
                         Advanced Integrations
                       </li>
                     </ul>
-                    <Button>Get Started</Button>
+                    <Button className='bg-accent'>Get Started</Button>
                   </div>
                 </CardContent>
               </Card>
@@ -340,12 +413,12 @@ export default function Page() {
             </div>
             <form className='bg-card p-6 rounded-lg shadow-md'>
               <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                <Input placeholder='Enter your name' />
-                <Input type='email' placeholder='Enter your email' />
+                <Input id='name' placeholder='Enter your name' />
+                <Input id='email' type='email' placeholder='Enter your email' />
               </div>
-              <Textarea placeholder='Enter your message' className='mt-6' />
-              <Button type='submit' className='mt-6'>
-                Submit
+              <Textarea id='message' placeholder='Enter your message' className='mt-6' />
+              <Button className='mt-6 w-full text-xl bg-accent' onClick={handleContactSubmit}>
+                {loading ? <Spinner size='sm' /> : "Submit"}
               </Button>
             </form>
           </div>

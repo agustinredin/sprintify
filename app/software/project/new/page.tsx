@@ -20,9 +20,6 @@ import { PlusIcon, UsersIcon, CalendarDaysIcon } from "@/components/ui/icons";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "@/components/ui/dropdown-menu"
 
 export default async function Component() {
-
-    await new Promise((re, rej) => setTimeout(() => re(true), 5000))
-
   return (
     <Card className="w-full max-w-2xl flex flex-col mx-auto my-8">
       <CardHeader>
@@ -74,11 +71,11 @@ export default async function Component() {
             <Label htmlFor="members">Project Members</Label>
             <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="bg-accent flex w-full justify-start font-normal">
+            <Button variant="outline" className="flex w-full justify-start font-normal">
               Select Team Member
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-full bg-background rounded-lg shadow-lg">
+          <DropdownMenuContent className="w-[38rem] bg-background rounded-lg shadow-lg">
             <DropdownMenuLabel className="px-4 py-2 text-sm font-medium text-muted-foreground">
               Team Members
             </DropdownMenuLabel>
