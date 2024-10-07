@@ -9,13 +9,13 @@ import { IResponse, IUser } from "@/app/lib/interfaces"
 const userCookie = {
   name: "session",
   options: { httpOnly: true, secure: true, sameSite: "lax", path: "/" },
-  duration: 90000,
+  duration: 180000,
 }
 
-export const createUserSession = async (userId: string) => {
+export const createUserSession = async (user: IUser) => {
   const expires = new Date(Date.now() + userCookie.duration)
-  console.log("created user session for user id", userId)
-cookies().set(userCookie.name, userId, {
+  console.log("created user session for user id", user.id)
+cookies().set(userCookie.name, JSON.stringify(user), {
     httpOnly: true,
     secure: true,
     sameSite: "lax",
@@ -25,10 +25,11 @@ cookies().set(userCookie.name, userId, {
 }
 
 export const verifyUserSession = async () => {
-  const userId = cookies().get(userCookie.name)?.value
-  if (!userId) return null
-  console.log("verified session for user:", userId)
-  return userId
+  const userAsString = cookies().get(userCookie.name)?.value
+  if (!userAsString) return null
+  const user = JSON.parse(userAsString)
+  console.log("verified session for user:", user.id)
+  return user
 }
 
 export const deleteUserSession = async () => {
@@ -63,7 +64,7 @@ export const loginUser = async (formData: FormData): Promise<IResponse<IUser>> =
         }
     }
 
-    await createUserSession(result.id)
+    await createUserSession(result)
 
     return {
       response: result,
@@ -88,25 +89,23 @@ export const createUser = async (formData: FormData): Promise<IResponse<string>>
     if (!user || !email || !password) {
       return { error: "All fields are required" }
     }
-
+    
     const hashedPassword = await hash(password || "", 10)
     const id = uuidv4() // Generate a new UUID
     const data = await sql`
-        INSERT INTO USERS (ID, name, email, password, roleid)
-        VALUES (${id}, ${user}, ${email}, ${hashedPassword}, 'abc123')
-        RETURNING ID
-      `
+    INSERT INTO USERS (ID, name, email, password, role_id, admin_id, verified)
+    VALUES (${id}, ${user}, ${email}, ${hashedPassword}, 'abc123', null, false)
+    RETURNING *`
 
     const result = data.rows[0] as IUser
-
-
-    await createUserSession(result.id)
+    await createUserSession(result)
 
     return {
       response: result.id,
       code: "success",
     }
   } catch (err) {
+    console.log(err)
     return {
       code: "error",
       error: "Error creating user. Refresh or try again later.",

@@ -11,17 +11,17 @@ export default async function middleware(req: NextRequest) {
 
   // return NextResponse.redirect(new URL("/signup", req.url))
 
-  // const protectedRoutes = ["/software"]
-  // const currentPath = req.nextUrl.pathname
-  // const isProtectedRoute = protectedRoutes.includes(currentPath)
-  // const verified = await verifyUserSession()
-  // if (isProtectedRoute && !verified) 
-  //   return NextResponse.redirect(new URL("/signup", req.url))
+  const protectedRoutes = ["/software"]
+  const currentPath = req.nextUrl.pathname
+  const isProtectedRoute = protectedRoutes.includes(currentPath)
+  const verified = await verifyUserSession()
+  if (isProtectedRoute && !verified) 
+    return NextResponse.redirect(new URL("/signup", req.url))
     
 
-  // if (req.url.includes('/signup')  && verified)
-  //   return NextResponse.redirect(new URL("/software", req.url))
-
+  if (req.url.includes('/signup')  && verified)
+    return NextResponse.redirect(new URL("/software", req.url))
+  
   return NextResponse.next()
 }
 

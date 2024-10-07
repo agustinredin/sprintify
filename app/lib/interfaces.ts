@@ -8,7 +8,10 @@ export interface IUser {
     id: string,
     name: string,
     email: string,
-    password: string
+    password: string,
+    role_id?: string,
+    admin_id?: string,
+    verified?: boolean
 }
 
 export interface IEmail {
