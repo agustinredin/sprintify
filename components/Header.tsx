@@ -1,3 +1,4 @@
+'use client'
 import Link from "next/link";
 import Image from "next/image";
 import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
@@ -22,8 +23,18 @@ import {
   SprintifyIcon,
 } from "@/components/ui/icons";
 import NavSheet from "./NavSheet";
+import { deleteUserSession } from "@/app/actions/userActions";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
+
+  const router = useRouter()
+
+  const handleLogout = async () => {
+    await deleteUserSession()
+     router.push('/signup')
+  }
+
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b px-4 sm:pl-20 sm:static sm:py-4 sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
       <NavSheet />
@@ -66,7 +77,7 @@ export default function Header() {
           <DropdownMenuItem>Settings</DropdownMenuItem>
           <DropdownMenuItem>Notifications</DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Logout</DropdownMenuItem>
+          <DropdownMenuItem  onClick={() => handleLogout()}>Logout</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </header>

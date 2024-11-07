@@ -1,30 +1,35 @@
-import { cookies } from "next/headers"
 import { type NextRequest, NextResponse } from "next/server"
-import { deleteUserSession, verifyUserSession } from "./app/actions/userActions"
-import { sql } from "@vercel/postgres"
+import { verifyUserSession } from "./app/actions/userActions"
 
-export default async function middleware(req: NextRequest) {
-  // TODO: lógica de protección de rutas según rol y aplicar en este sql
-  // const protectedRoutes = (await sql`select * from protectedroutes`).rows as ;
-  // const currentPath = req.nextUrl.pathname;
-  // const isProtectedRoute = protectedRoutes.filter(i => i.nam);
-
-  // return NextResponse.redirect(new URL("/signup", req.url))
-
-  const protectedRoutes = ["/software"]
-  const currentPath = req.nextUrl.pathname
-  const isProtectedRoute = protectedRoutes.includes(currentPath)
-  const verified = await verifyUserSession()
-  if (isProtectedRoute && !verified) 
-    return NextResponse.redirect(new URL("/signup", req.url))
-    
-
-  if (req.url.includes('/signup')  && verified)
-    return NextResponse.redirect(new URL("/software", req.url))
+export async function middleware(req: NextRequest) {
+  const { pathname } = req.nextUrl
   
+  //static 
+  if (
+    pathname.startsWith('/_next') || 
+    pathname.startsWith('/api') ||
+    pathname.includes('.') //.css, .js, .png, etc.
+  ) {
+    return NextResponse.next()
+  }
+  
+  //TODO: fetchear protected routes y verificar segun usuario y rol si este puede ver o no
+  const protectedRoutes = ["/software"]
+  const isProtectedRoute = protectedRoutes.includes(pathname)
+  const verified = await verifyUserSession()
+
+  //verbose para debuggear bien
+  if (isProtectedRoute && !verified) {
+    return NextResponse.redirect(new URL("/signup", req.url))
+  }
+
+  if (pathname.startsWith('/signup') && verified) {
+    return NextResponse.redirect(new URL("/software", req.url))
+  }
+
   return NextResponse.next()
 }
 
 export const config = {
-  matcher: ["/:path*"],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
 }

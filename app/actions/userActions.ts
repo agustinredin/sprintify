@@ -4,7 +4,9 @@ import { createClient, db, sql } from "@vercel/postgres"
 import { v4 as uuidv4 } from "uuid"
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
-import { IResponse, IUser } from "@/app/lib/interfaces"
+import { IEmail, IResponse, IUser } from "@/app/lib/interfaces"
+import ConfirmRegister from "@/components/ConfirmRegister"
+import { sendEmail } from "./emailActions"
 
 const userCookie = {
   name: "session",
@@ -99,6 +101,23 @@ export const createUser = async (formData: FormData): Promise<IResponse<string>>
 
     const result = data.rows[0] as IUser
     await createUserSession(result)
+
+    let confirmRegisterRequest: IEmail = {
+      from: "Acme <onboarding@resend.dev>",
+      to: ["agustintomasredin@gmail.com"],//TODO: email
+      subject: "Sprintify - Confirm your Email",
+      body: ConfirmRegister({email})
+    }
+
+    const emailResponse = await sendEmail(confirmRegisterRequest)
+    console.log(emailResponse)
+    if (emailResponse?.error) {
+      console.log(emailResponse?.error)
+      return {
+        code: "error",
+        error: "Error sending email confirmation. Refresh or try again later."
+      }
+    } 
 
     return {
       response: result.id,
