@@ -37,6 +37,7 @@ export const config = {
     // Match all paths except static files
     '/((?!_next/static|_next/image|favicon.ico).*)',
     // Optional: Add specific paths you want to protect
-    '/software/:path*'
+    '/software/:path*',
+    '/((?!api|_next|.*\\..*).*)'
   ],
 }

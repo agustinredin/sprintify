@@ -28,19 +28,17 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang='en'>
-      <body className={cn("antialiased", fontHeading.variable, fontBody.variable)}>
-        <Header />
-        <Nav />
-        <main className='flex min-h-screen w-full flex-col'>
-          <div className='flex flex-col sm:gap-4 p-4 sm:pl-20 sm:px-6 sm:py-0'>
-            <ToastProvider>
-              <Suspense fallback={<Loader />} />
-              {children}
-            </ToastProvider>
-          </div>
-        </main>
-      </body>
-    </html>
+    <section className={cn("antialiased", fontHeading.variable, fontBody.variable)}>
+      <Header />
+      <Nav />
+      <main className='flex min-h-screen w-full flex-col'>
+        <div className='flex flex-col sm:gap-4 p-4 sm:pl-20 sm:px-6 sm:py-0'>
+          <ToastProvider>
+            <Suspense fallback={<Loader />} />
+            {children}
+          </ToastProvider>
+        </div>
+      </main>
+    </section>
   )
 }

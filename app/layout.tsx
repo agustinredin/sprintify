@@ -6,6 +6,10 @@ import { cn } from "@/app/lib/utils"
 import { ToastProvider } from "@/components/context/ToastContext"
 import { Suspense } from "react"
 import Loader from "@/components/ui/loader"
+import {PropsWithChildren} from 'react';
+
+
+
 const fontHeading = Bricolage_Grotesque({
   subsets: ["latin"],
   display: "swap",
@@ -23,7 +27,7 @@ export const metadata: Metadata = {
   description: "Scrum Manager App",
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang='en'>
       <body className={cn("antialiased", fontHeading.variable, fontBody.variable)}>
