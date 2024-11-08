@@ -12,7 +12,6 @@ import { SprintifyIcon } from "@/components/ui/icons"
 import { loginUser, createUser } from "../actions/userActions"
 import { useToast } from "@/components/context/ToastContext"
 import Loader from '@/components/ui/loader'
-import { sleep } from "../lib/utils"
 
 function SubmitButton() {
   const { pending } = useFormStatus()
@@ -32,7 +31,6 @@ export default function Page() {
   const [view, setView] = useState<AuthView>("login")
 
   useEffect(() => {
-
     const confirmUser = searchParams.get("confirmUser")
     if (confirmUser) {
       handleConfirmUser(confirmUser)
@@ -80,7 +78,7 @@ export default function Page() {
   }
 
   return (
-    <Suspense fallback={<Loader/>}>
+    <>
       <div className='absolute top-4 left-4'>
         <Link href='#' className='flex items-center justify-center' prefetch={false}>
           <SprintifyIcon className='w-10 h-10' />
@@ -100,7 +98,7 @@ export default function Page() {
           {view === "register" && <RegisterForm dispatch={registerDispatch} setView={setView} />}
         </Card>
       </div>
-    </Suspense>
+    </>
   )
 }
 
