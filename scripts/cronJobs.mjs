@@ -15,4 +15,4 @@ cron.schedule('0 3 * * *', async () => {
   timezone: "America/Sao_Paulo" // This corresponds to GMT-3
 });
 
-console.log('Cron job scheduled.');
+console.log('Cron jobs scheduled.');
