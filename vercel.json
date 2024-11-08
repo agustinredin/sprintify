@@ -1,7 +1,7 @@
 {
     "crons": [
       {
-        "path": "/api/crons/delete-unverif-users/route.ts",
+        "path": "/api/crons/delete-unverif-users",
         "schedule": "37 7 * * *"
       }
     ]
