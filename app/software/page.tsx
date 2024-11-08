@@ -3,11 +3,10 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Progress } from "@/components/ui/progress"
 import { BarChart, Users, Clock, CheckSquare } from "lucide-react"
-import EmailVerificationModal from "@/components/EmailVerificationModal"
-import { verifyUserSession } from "../actions/userActions"
+import EmailVerificationModal from "@/components/custom/EmailVerificationModal"
 
 export default async function Component() {
-
+  
   return (
     <section className='py-2'>
       <EmailVerificationModal/>

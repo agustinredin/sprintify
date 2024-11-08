@@ -4,21 +4,23 @@ import { verifyUserSession } from "./app/actions/userActions"
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
   
-  //static 
+  // Improved static file handling
   if (
-    pathname.startsWith('/_next') || 
-    pathname.startsWith('/api') ||
-    pathname.includes('.') //.css, .js, .png, etc.
+    pathname.startsWith('/_next') || // Next.js internal routes
+    pathname.startsWith('/api') ||   // API routes
+    pathname.includes('favicon') ||   // Favicon
+    pathname.match(/\.(css|js|jsx|ts|tsx|png|jpg|jpeg|gif|ico|svg)$/) // Static files
   ) {
     return NextResponse.next()
   }
   
-  //TODO: fetchear protected routes y verificar segun usuario y rol si este puede ver o no
+  // Protected routes check
   const protectedRoutes = ["/software"]
-  const isProtectedRoute = protectedRoutes.includes(pathname)
+  const isProtectedRoute = protectedRoutes.some(route => 
+    pathname === route || pathname.startsWith(`${route}/`)
+  )
   const verified = await verifyUserSession()
 
-  //verbose para debuggear bien
   if (isProtectedRoute && !verified) {
     return NextResponse.redirect(new URL("/signup", req.url))
   }
@@ -31,5 +33,10 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+  matcher: [
+    // Match all paths except static files
+    '/((?!_next/static|_next/image|favicon.ico).*)',
+    // Optional: Add specific paths you want to protect
+    '/software/:path*'
+  ],
 }

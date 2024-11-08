@@ -1,11 +1,11 @@
 "use server"
 import { hash, compare } from "bcryptjs"
-import { createClient, db, sql } from "@vercel/postgres"
+import { sql } from "@vercel/postgres"
 import { v4 as uuidv4 } from "uuid"
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 import { IEmail, IResponse, IUser } from "@/app/lib/interfaces"
-import ConfirmRegister from "@/components/ConfirmRegister"
+import ConfirmRegister from "@/components/custom/ConfirmRegister"
 import { sendEmail } from "./emailActions"
 
 const userCookie = {

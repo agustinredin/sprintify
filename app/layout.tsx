@@ -3,7 +3,7 @@ import "@/app/globals.css";
 import { Bricolage_Grotesque } from "next/font/google";
 import { Inter } from "next/font/google";
 import { cn } from "@/app/lib/utils";
-
+import { ToastProvider } from "@/components/context/ToastContext";
 const fontHeading = Bricolage_Grotesque({
   subsets: ["latin"],
   display: "swap",
@@ -32,7 +32,9 @@ export default function RootLayout({
       <body
         className={cn("antialiased", fontHeading.variable, fontBody.variable)}
       >
+        <ToastProvider>
         {children}
+        </ToastProvider>
       </body>
     </html>
   );

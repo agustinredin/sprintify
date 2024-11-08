@@ -9,7 +9,7 @@ import {
   YAxis,
   ResponsiveContainer,
 } from "recharts";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "./ui/chart";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "../ui/chart";
 import { CartesianGrid, XAxis } from "recharts";
 
 const data = [

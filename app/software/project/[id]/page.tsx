@@ -2,7 +2,7 @@
 
 import { lastPathFromURL } from "@/app/lib/utils";
 import { useSearchParams, usePathname } from "next/navigation";
-import Dashboard from "@/components/Dashboard";
+import Dashboard from "@/components/custom/Dashboard";
 export default function Component() {
 
     const id = lastPathFromURL(usePathname())

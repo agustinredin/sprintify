@@ -3,7 +3,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { InboxIcon, TimerIcon, FlagIcon, CheckIcon } from "@/components/ui/icons"
-import Linechart from "@/components/LineChart"
+import Linechart from "@/components/custom/LineChart"
 import { ClockIcon } from "lucide-react"
 
 export default function Dashboard() {

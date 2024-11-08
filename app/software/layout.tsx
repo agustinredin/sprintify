@@ -3,8 +3,8 @@ import "@/app/globals.css";
 import { Bricolage_Grotesque } from "next/font/google";
 import { Inter } from "next/font/google";
 import { cn } from "@/app/lib/utils";
-import Header from "@/components/Header";
-import Nav from "@/components/Nav";
+import Header from "@/components/custom/Header";
+import Nav from "@/components/custom/Nav";
 
 const fontHeading = Bricolage_Grotesque({
   subsets: ["latin"],
