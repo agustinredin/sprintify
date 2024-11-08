@@ -2,7 +2,7 @@
     "crons": [
       {
         "path": "/api/crons/delete-unverif-users/route.ts",
-        "schedule": "*/1 * * * *"
+        "schedule": "37 7 * * *"
       }
     ]
   }
