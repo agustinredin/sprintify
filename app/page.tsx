@@ -26,6 +26,9 @@ import { sendEmail } from "./actions/emailActions"
 import { IEmail } from "./lib/interfaces"
 
 export default function Page() {
+  console.log('Sprintify landing page. Version of software: 0.1.0')
+  console.log('Last updated: 11/8/24')
+
   const params = usePathname()
   if (params != null) {
     if (lastPathFromURL(params) != "") scroll(lastPathFromURL(params))
