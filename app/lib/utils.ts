@@ -1,7 +1,17 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { useToast } from "@/components/context/ToastContext"
+import { AuthOptions } from "next-auth"
+import GithubProvider from 'next-auth/providers/github'
 
+export const nextAuthOptions: AuthOptions = {
+    providers: [
+      GithubProvider({
+        clientId: process.env.GITHUB_ID as string,
+        clientSecret: process.env.GITHUB_SECRET as string,
+      }),
+    ],
+  };
+  
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
