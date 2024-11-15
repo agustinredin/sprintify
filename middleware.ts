@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { verifyUserSession } from "./app/actions/userActions"
+import { getUserSession } from "./app/actions/userActions"
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
@@ -19,15 +19,15 @@ export async function middleware(req: NextRequest) {
   const isProtectedRoute = protectedRoutes.some(route => 
     pathname === route || pathname.startsWith(`${route}/`)
   )
-  const verified = await verifyUserSession()
+  // const verified = await getUserSession()
 
-  if (isProtectedRoute && !verified) {
-    return NextResponse.redirect(new URL("/signup", req.url))
-  }
+  // if (isProtectedRoute && !verified) {
+  //   return NextResponse.redirect(new URL("/signup", req.url))
+  // }
 
-  if (pathname.startsWith('/signup') && verified) {
-    return NextResponse.redirect(new URL("/software", req.url))
-  }
+  // if (pathname.startsWith('/signup') && verified) {
+  //   return NextResponse.redirect(new URL("/software", req.url))
+  // }
 
   return NextResponse.next()
 }

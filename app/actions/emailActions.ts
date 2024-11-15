@@ -5,6 +5,7 @@ import { IEmail, IResponse } from "../lib/interfaces"
 const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function sendEmail(email: IEmail): Promise<IResponse<string>> {
+  console.log(email)
   const emailResponse = await resend.emails.send({
     from: "Acme <onboarding@resend.dev>",
     to: email.to,

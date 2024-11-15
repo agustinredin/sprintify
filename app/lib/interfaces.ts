@@ -1,6 +1,6 @@
 export interface IResponse<T> {
     response?: T,
-    code?: 'success' | 'pending' | 'error',
+    code?: 'success' | 'pending' | 'error' | 'info',
     error?: string
 }
 

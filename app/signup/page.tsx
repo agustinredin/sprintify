@@ -1,6 +1,6 @@
 "use client"
 
-import { Suspense, useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useFormState, useFormStatus } from "react-dom"
 import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
@@ -9,9 +9,12 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { SprintifyIcon } from "@/components/ui/icons"
-import { loginUser, createUser } from "../actions/userActions"
+import { loginUser, createUser, verifyUser, resetUserPasswordRequest, getUserById, resetUserPassword } from "../actions/userActions"
 import { useToast } from "@/components/context/ToastContext"
-import Loader from '@/components/ui/loader'
+import { GitHubLogoIcon } from "@radix-ui/react-icons"
+import { signIn } from 'next-auth/react'
+import Tooltip from "@/components/ui/tooltip"
+import { TooltipTrigger } from "@radix-ui/react-tooltip"
 
 function SubmitButton() {
   const { pending } = useFormStatus()
@@ -22,49 +25,104 @@ function SubmitButton() {
   )
 }
 
-type AuthView = "login" | "forgotPassword" | "register"
+type AuthView = "login" | "forgotPassword" | "resetPassword" | "register"
 
 export default function Page() {
   const { showToast } = useToast()
   const searchParams = useSearchParams()
   const router = useRouter()
   const [view, setView] = useState<AuthView>("login")
+  const [isUserConfirmed, setIsUserConfirmed] = useState<Boolean>(false)
+  const [isResetPassword, setIsPasswordReset] = useState<Boolean>(false)
+  const [resetPasswordEmailValue, setResetPasswordEmailValue] = useState<string>("")
+
+  const handleConfirmUser = useCallback(
+    async (confirmUserId: string) => {
+      const result = await verifyUser(confirmUserId)
+      if (result.error) {
+        showToast("error", result.error, 5000)
+        return
+      }
+
+      showToast("success", "E-mail confirmed. Now log in to your account.", 5000)
+    },
+    [showToast],
+  )
+
+  const handleResetPassword = useCallback(
+    async (resetPasswordUserId: string) => {
+      const result = await getUserById(resetPasswordUserId)
+
+      if (!result) {
+        showToast("error", "User not found in database. Please contact support.", 5000)
+        setView("login")
+        return
+      }
+
+      setResetPasswordEmailValue(result.email)
+      setView("resetPassword")
+    },
+    [showToast],
+  )
 
   useEffect(() => {
-    const confirmUser = searchParams.get("confirmUser")
-    if (confirmUser) {
-      handleConfirmUser(confirmUser)
+    if (!isUserConfirmed) {
+      const confirmUserId = searchParams.get("confirmUserId")
+      if (confirmUserId) {
+        handleConfirmUser(confirmUserId)
+        setIsUserConfirmed(true)
+      }
     }
-  })
-  
-  const handleConfirmUser = async (confirmUser: string) => {
-    showToast("success", "Email confirmed. Now log in to your account.", 5000)
-    setView("login")
-  }
-  
+    if (!isResetPassword) {
+      const resetPasswordUserId = searchParams.get("resetPasswordUserId")
+      if (resetPasswordUserId) {
+        handleResetPassword(resetPasswordUserId)
+        setIsPasswordReset(true)
+      }
+    }
+  }, [searchParams, handleConfirmUser, isUserConfirmed, handleResetPassword, isResetPassword])
+
   const [, loginDispatch] = useFormState(loginAction, null)
   const [, forgotPasswordDispatch] = useFormState(forgotPasswordAction, null)
+  const [, resetPasswordDispatch] = useFormState(resetPasswordAction, null)
   const [, registerDispatch] = useFormState(registerAction, null)
-  
+
   async function loginAction(prevState: unknown, formData: FormData): Promise<void> {
     const result = await loginUser(formData)
+
     if (result.error) {
       showToast("error", result.error, 5000)
       return
     }
-    setTimeout(() => router.push("/software"), 1500)
+
+    if (result.error && result.code == "info") {
+      showToast("info", result.error, 5000)
+    }
+
+    setTimeout(() => router.push("/software"), 1000)
     showToast("success", "Logged in successfully. Redirecting...", 5000)
     return
   }
 
   async function forgotPasswordAction(prevState: unknown, formData: FormData): Promise<void> {
-    const email = formData.get("email")
+    const email = formData.get("email")?.toString()
     if (!email) {
-      showToast("error", "Email is required", 5000)
+      showToast("error", "E-mail is required", 5000)
       return
     }
-    await new Promise((resolve) => setTimeout(resolve, 1000)) // Simulate API call
-    return
+    const result = await resetUserPasswordRequest(email)
+
+    if (result.error) {
+      showToast("error", result.error, 5000)
+      return
+    }
+
+    if (result.response && result.code == "info") {
+      showToast("info", result.response, 5000)
+      return
+    }
+
+    showToast("success", result.response ?? "", 5000)
   }
 
   async function registerAction(prevState: unknown, formData: FormData): Promise<void> {
@@ -73,8 +131,37 @@ export default function Page() {
       showToast("error", result.error, 5000)
       return
     }
-    showToast("success", "Registered successfully. Please check your email to confirm registration.", 5000)
+    if (result.error && result.code == "info") {
+      showToast("info", result.error, 5000)
+      setView("login")
+    }
+
+    showToast("success", "Registered successfully. Please check your e-mail to confirm registration.", 5000)
     return
+  }
+
+  async function resetPasswordAction(prevState: unknown, formData: FormData): Promise<void> {
+    const result = await resetUserPassword(formData)
+    if (result.error) {
+      showToast("error", result.error, 5000)
+      return
+    }
+    if (result.error && result.code == "info") {
+      showToast("info", result.error, 5000)
+      setView("login")
+    }
+
+    showToast("success", result.response ?? '', 5000)
+    setView('login')
+    return
+  }
+
+  const githubAuthTest = async () => {
+    console.log('test')
+    //TO-DO: chequear integración con GH y pasar datos a createUser => check response + params createUser
+    const result = await signIn('github')
+    console.log(result)
+    console.log('gh test fin')
   }
 
   return (
@@ -90,12 +177,37 @@ export default function Page() {
         <Card className='w-full max-w-md mx-auto'>
           <CardHeader>
             <CardTitle>
-              {view === "login" ? "Login" : view === "forgotPassword" ? "Forgot Password" : "Register"}
+              {view === "login"
+                ? "Login"
+                : view === "forgotPassword"
+                ? "Forgot Password"
+                : view === "resetPassword"
+                ? "Reset password"
+                : "Register"}
             </CardTitle>
           </CardHeader>
           {view === "login" && <LoginForm dispatch={loginDispatch} setView={setView} />}
           {view === "forgotPassword" && <ForgotPasswordForm dispatch={forgotPasswordDispatch} setView={setView} />}
+          {view === "resetPassword" && (
+            <ResetPasswordForm dispatch={resetPasswordDispatch} email={resetPasswordEmailValue} />
+          )}
           {view === "register" && <RegisterForm dispatch={registerDispatch} setView={setView} />}
+          {(view === "register" || view == "login") && (
+            <CardFooter className='space-y-4'>
+              <div className='w-full'>
+                <div className='relative flex h-7 items-center justify-center gap-2 pb-2'>
+                  <div className='w-6 border-t border-yellow-darker dark:border-[#B9B9C6]'></div>
+                  <span className='flex-shrink font-primary text-sm text-yellow-darker dark:text-[#B9B9C6]'>or</span>
+                  <div className='w-6 border-t border-yellow-darker dark:border-[#B9B9C6]'></div>
+                </div>
+                <div className='flex items-center justify-center'>
+                  <Tooltip content='Sign In with GitHub'>
+                    <GitHubLogoIcon className='w-8 h-8 text-primary/80 hover:text-primary hover:cursor-pointer' />
+                  </Tooltip>
+                </div>
+              </div>
+            </CardFooter>
+          )}
         </Card>
       </div>
     </>
@@ -105,6 +217,7 @@ export default function Page() {
 type FormProps = {
   dispatch: (formData: FormData) => void
   setView: (view: AuthView) => void
+  email?: string
 }
 
 function LoginForm({ dispatch, setView }: FormProps) {
@@ -112,15 +225,15 @@ function LoginForm({ dispatch, setView }: FormProps) {
     <form action={dispatch}>
       <CardContent className='space-y-4'>
         <div className='space-y-2'>
-          <Label htmlFor='email'>Email</Label>
-          <Input id='email' name='email' type='email' placeholder='Enter your email' required />
+          <Label htmlFor='email'>E-mail</Label>
+          <Input id='email' name='email' type='email' placeholder='Enter your e-mail' required />
         </div>
         <div className='space-y-2'>
           <Label htmlFor='password'>Password</Label>
           <Input id='password' name='password' type='password' placeholder='Enter your password' required />
         </div>
       </CardContent>
-      <CardFooter className='flex flex-col'>
+      <CardFooter className='flex flex-col px-6 py-4'>
         <SubmitButton />
         <Button variant='link' onClick={() => setView("forgotPassword")}>
           Forgot Password?
@@ -138,11 +251,11 @@ function ForgotPasswordForm({ dispatch, setView }: FormProps) {
     <form action={dispatch}>
       <CardContent className='space-y-4'>
         <div className='space-y-2'>
-          <Label htmlFor='forgot-email'>Email</Label>
+          <Label htmlFor='forgot-email'>E-mail</Label>
           <Input id='forgot-email' name='email' type='email' placeholder='Enter your email' required />
         </div>
-        <p className='text-sm text-muted-foreground'>
-          Enter your email address and we&apos;ll send you a link to reset your password.
+        <p className='text-0'>
+          Enter your e-mail address and we&apos;ll send you a link to reset your password.
         </p>
       </CardContent>
       <CardFooter className='flex flex-col items-start gap-4'>
@@ -150,6 +263,30 @@ function ForgotPasswordForm({ dispatch, setView }: FormProps) {
         <Button variant='link' onClick={() => setView("login")}>
           Back to Login
         </Button>
+      </CardFooter>
+    </form>
+  )
+}
+
+function ResetPasswordForm({ dispatch, email = '' }: Omit<FormProps, "setView">) {
+  return (
+    <form action={dispatch}>
+      <CardContent className='space-y-4'>
+        <div className='space-y-2'>
+          <p className=''>E-mail: {email}</p>
+          <Input name='new-password-email' type='hidden' value={email}></Input>
+        </div>
+        <div className='space-y-2'>
+          <Label htmlFor='register-password'>New Password</Label>
+          <Input name='new-password' type='password' placeholder='Create a new password' required />
+        </div>
+        <div className='space-y-2'>
+          <Label htmlFor='register-password'>Confirm New Password</Label>
+          <Input name='new-password-confirm' type='password' placeholder='Confirm new password' required />
+        </div>
+      </CardContent>
+      <CardFooter className='flex flex-col'>
+        <SubmitButton />
       </CardFooter>
     </form>
   )
@@ -164,8 +301,8 @@ function RegisterForm({ dispatch, setView }: FormProps) {
           <Input id='user' name='user' placeholder='Enter your name' required />
         </div>
         <div className='space-y-2'>
-          <Label htmlFor='register-email'>Email</Label>
-          <Input id='register-email' name='email' type='email' placeholder='Enter your email' required />
+          <Label htmlFor='register-email'>E-mail</Label>
+          <Input id='register-email' name='email' type='email' placeholder='Enter your e-mail' required />
         </div>
         <div className='space-y-2'>
           <Label htmlFor='register-password'>Password</Label>
