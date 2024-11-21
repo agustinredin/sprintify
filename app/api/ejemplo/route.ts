@@ -6,7 +6,7 @@ export async function GET(request: Request) {
   try {
     const result = await sql`SELECT * from ejemploproductos`
     console.log(result)
-    return new Response(JSON.stringify(result.rows))
+    return Response.json(result.rows)
   } catch (error) {
     return new Response(`error: ${error}`)
   }
