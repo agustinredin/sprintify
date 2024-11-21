@@ -3,6 +3,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Progress } from "@/components/ui/progress"
 import { BarChart, Users, Clock, CheckSquare } from "lucide-react"
+import Link from "next/link"
 
 export default async function Component() {
   
@@ -10,7 +11,9 @@ export default async function Component() {
     <section className='py-2'>
       <div className='flex items-center justify-between mb-8'>
         <h2 className='text-3xl font-bold'>Agustin Redin&apos;s projects</h2>
-        <Button>Add New</Button>
+        <Link href='/software/project/new'>
+          <Button>Add New</Button>
+        </Link>
       </div>
       <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
         <Card className='w-full max-w-3xl'>

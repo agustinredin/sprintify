@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/icons"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { lastPathFromURL, sleep } from "@/app/lib/utils"
+import { lastPathFromURL } from "@/app/lib/utils"
 import { FormEvent, useState } from "react"
 import Spinner from "@/components/ui/spinner"
 import { sendEmail } from "./actions/emailActions"
@@ -28,7 +28,6 @@ import { IEmail } from "./lib/interfaces"
 export default function Page() {
   console.log('Sprintify landing page. Version of software: 0.1.0')
   console.log('Last updated: 15.11.2024')
-  console.log('this is an auto-push test. Commited!')
 
   const params = usePathname()
   if (params != null) {

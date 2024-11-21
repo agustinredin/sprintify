@@ -8,7 +8,7 @@ import Nav from "@/components/custom/Nav"
 import { ToastProvider } from "@/components/context/ToastContext"
 import { getServerSession } from "next-auth"
 import { nextAuthOptions } from "@/app/lib/utils"
-import Provider from "@/components/context/UserContext"
+import UserProvider from "@/components/context/UserContext"
 import { Suspense } from "react"
 import Loader from "@/components/ui/loader"
 
@@ -31,6 +31,8 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(nextAuthOptions)
+  console.log('USER SESSION:', session)
+  
   return (
     <section className={cn("antialiased", fontHeading.variable, fontBody.variable)}>
       <Header />
@@ -38,10 +40,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <main className='flex min-h-screen w-full flex-col'>
         <div className='flex flex-col sm:gap-4 p-4 sm:pl-20 sm:px-6 sm:py-0'>
           <ToastProvider>
-            <Provider session={session}>
+            <UserProvider session={session}>
               <Suspense fallback={<Loader />} />
               {children}
-            </Provider>
+            </UserProvider>
           </ToastProvider>
         </div>
       </main>

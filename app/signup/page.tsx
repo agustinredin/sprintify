@@ -15,6 +15,7 @@ import { GitHubLogoIcon } from "@radix-ui/react-icons"
 import { signIn } from 'next-auth/react'
 import Tooltip from "@/components/ui/tooltip"
 import { TooltipTrigger } from "@radix-ui/react-tooltip"
+import { getServerSession } from "next-auth"
 
 function SubmitButton() {
   const { pending } = useFormStatus()
@@ -32,8 +33,8 @@ export default function Page() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [view, setView] = useState<AuthView>("login")
-  const [isUserConfirmed, setIsUserConfirmed] = useState<Boolean>(false)
-  const [isResetPassword, setIsPasswordReset] = useState<Boolean>(false)
+  const [userHasConfirmed, setUserHasConfirmed] = useState<Boolean>(false)
+  const [passwordHasReset, setPasswordHasReset] = useState<Boolean>(false)
   const [resetPasswordEmailValue, setResetPasswordEmailValue] = useState<string>("")
 
   const handleConfirmUser = useCallback(
@@ -66,21 +67,27 @@ export default function Page() {
   )
 
   useEffect(() => {
-    if (!isUserConfirmed) {
+    if (!userHasConfirmed) {
       const confirmUserId = searchParams.get("confirmUserId")
       if (confirmUserId) {
         handleConfirmUser(confirmUserId)
-        setIsUserConfirmed(true)
+        setUserHasConfirmed(true)
       }
     }
-    if (!isResetPassword) {
+    if (!passwordHasReset) {
       const resetPasswordUserId = searchParams.get("resetPasswordUserId")
       if (resetPasswordUserId) {
         handleResetPassword(resetPasswordUserId)
-        setIsPasswordReset(true)
+        setPasswordHasReset(true)
       }
     }
-  }, [searchParams, handleConfirmUser, isUserConfirmed, handleResetPassword, isResetPassword])
+
+    //GitHub auth
+    if (searchParams.get("githubAuthorize"))
+    {
+      router.push('/software')
+    }
+  }, [searchParams, handleConfirmUser, userHasConfirmed, handleResetPassword, passwordHasReset, router])
 
   const [, loginDispatch] = useFormState(loginAction, null)
   const [, forgotPasswordDispatch] = useFormState(forgotPasswordAction, null)
@@ -156,14 +163,6 @@ export default function Page() {
     return
   }
 
-  const githubAuthTest = async () => {
-    console.log('test')
-    //TO-DO: chequear integración con GH y pasar datos a createUser => check response + params createUser
-    const result = await signIn('github')
-    console.log(result)
-    console.log('gh test fin')
-  }
-
   return (
     <>
       <div className='absolute top-4 left-4'>
@@ -201,8 +200,10 @@ export default function Page() {
                   <div className='w-6 border-t border-yellow-darker dark:border-[#B9B9C6]'></div>
                 </div>
                 <div className='flex items-center justify-center'>
-                  <Tooltip content='Sign In with GitHub'>
-                    <GitHubLogoIcon className='w-8 h-8 text-primary/80 hover:text-primary hover:cursor-pointer' />
+                  <Tooltip content='Sign In with GitHub' className="bg-accent">
+                    <button onClick={() => signIn('github')}>
+                      <GitHubLogoIcon className='w-8 h-8 text-primary/80 hover:text-accent hover:cursor-pointer' />
+                    </button>
                   </Tooltip>
                 </div>
               </div>

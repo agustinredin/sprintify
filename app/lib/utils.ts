@@ -1,15 +1,21 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { AuthOptions } from "next-auth"
+import AdapterUser, { User as nextAuthUser, AuthOptions } from "next-auth"
 import GithubProvider from 'next-auth/providers/github'
 
 export const nextAuthOptions: AuthOptions = {
     providers: [
       GithubProvider({
         clientId: process.env.GITHUB_ID as string,
-        clientSecret: process.env.GITHUB_SECRET as string,
+        clientSecret: process.env.GITHUB_SECRET as string
       }),
     ],
+    callbacks: {
+      signIn: async (params : unknown) => {
+        //??????????????????????????????????????????
+        return true
+      }
+    }
   };
   
 export function cn(...inputs: ClassValue[]) {
