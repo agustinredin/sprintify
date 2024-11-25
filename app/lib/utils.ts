@@ -42,6 +42,7 @@ export const nextAuthOptions: AuthOptions = {
       return false
     },
   },
+  secret: process.env.NEXTAUTH_SECRET
 }
 
 export function cn(...inputs: ClassValue[]) {
