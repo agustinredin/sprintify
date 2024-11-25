@@ -7,6 +7,8 @@ import { ToastProvider } from "@/components/context/ToastContext"
 import { Suspense } from "react"
 import Loader from "@/components/ui/loader"
 import { PropsWithChildren } from "react"
+import { getUserSession } from "./actions/userActions"
+import { redirect } from "next/navigation"
 
 const fontHeading = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -25,12 +27,13 @@ export const metadata: Metadata = {
   description: "Scrum Manager App",
 }
 
-export default function RootLayout({ children }: PropsWithChildren) {
+export default async function RootLayout({ children }: PropsWithChildren) {
+
   return (
     <html lang='en'>
       <body className={cn("antialiased", fontHeading.variable, fontBody.variable)}>
         <ToastProvider>
-            <Suspense fallback={<Loader />}>{children}</Suspense>
+          <Suspense fallback={<Loader />}>{children}</Suspense>
         </ToastProvider>
       </body>
     </html>

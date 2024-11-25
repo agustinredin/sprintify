@@ -20,3 +20,7 @@ export interface IEmail {
     subject: string,
     body: React.ReactNode | string
 }
+
+export type Strict<T> = {
+    [P in keyof T]-?: NonNullable<T[P]>;
+  };

@@ -3,11 +3,12 @@ import { hash, compare } from "bcryptjs"
 import { sql } from "@vercel/postgres"
 import { v4 as uuidv4 } from "uuid"
 import { cookies } from "next/headers"
-import { IEmail, IResponse, IUser } from "@/app/lib/interfaces"
+import { IEmail, IResponse, IUser, Strict } from "@/app/lib/interfaces"
 import ConfirmRegisterEmail from "@/components/custom/ConfirmRegisterEmail"
 import { sendEmail } from "./emailActions"
 import ResetPasswordEmail from "@/components/custom/ResetPasswordEmail"
 import { isValidPassword } from "../lib/utils"
+import { Account, Profile } from "next-auth"
 
 const userCookie = {
   name: "session",
@@ -18,6 +19,12 @@ const userCookie = {
 export const getUserById = async (id: string) => {
   const data = await sql`SELECT * from users where id=${id}`
   const result = (data.rows[0] as IUser) ?? null
+  return result
+}
+
+export const getUserByEmail = async (email: string) => {
+  const data = await sql`SELECT * from users where email=${email}`
+  const result = data.rows[0] as IUser ?? null
   return result
 }
 
@@ -154,6 +161,48 @@ export const createUser = async (formData: FormData): Promise<IResponse<string>>
     return {
       code: "error",
       error: "Error creating user. Refresh or try again later.",
+    }
+  }
+}
+
+export const createOAuthUser = async (account: Strict<Profile>): Promise<IResponse<Boolean>> => {
+  try {
+
+    //oauth default password (wont be required)
+    const { user, email, password } = {
+      user: account.name,
+      email: account.email,
+      password: `${account.name}__${account.email}__${account.sub}`
+    }
+
+    const selectQuery = await sql`SELECT * from USERS where email=${email}`
+
+    const selectResult = selectQuery.rowCount
+
+    //user already has an OAuth account
+    if (selectResult && selectResult > 0) {
+      return {
+        response: true,
+        code: 'success'
+      }
+    }
+
+    const hashedPassword = await hash(password || "", 10)
+    const id = uuidv4() // Generate a new UUID
+    const insertQuery = await sql`
+    INSERT INTO USERS (ID, name, email, password, role_id, admin_id, verified)
+    VALUES (${id}, ${user}, ${email}, ${hashedPassword}, null, null, true)
+    RETURNING *`
+
+    return {
+      response: true,
+      code: "success",
+    }
+  } catch (err) {
+    console.log(err)
+    return {
+      code: "error",
+      error: "Error creating user from OAuth. Refresh or try again later.",
     }
   }
 }

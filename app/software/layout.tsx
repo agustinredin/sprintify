@@ -30,8 +30,8 @@ export const metadata: Metadata = {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const session = await getServerSession(nextAuthOptions)
-  console.log('USER SESSION:', session)
+  {/* OAuth UserProvider override: la lógica la maneja la aplicación via Storage */}
+  // const OAuthSession = await getServerSession(nextAuthOptions)
   
   return (
     <section className={cn("antialiased", fontHeading.variable, fontBody.variable)}>
@@ -40,10 +40,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <main className='flex min-h-screen w-full flex-col'>
         <div className='flex flex-col sm:gap-4 p-4 sm:pl-20 sm:px-6 sm:py-0'>
           <ToastProvider>
-            <UserProvider session={session}>
+            {/* <UserProvider session={OAuthSession}> */}
               <Suspense fallback={<Loader />} />
               {children}
-            </UserProvider>
+            {/* </UserProvider> */}
           </ToastProvider>
         </div>
       </main>

@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { Suspense, useCallback, useEffect, useState } from "react"
 import { useFormState, useFormStatus } from "react-dom"
 import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
@@ -9,13 +9,15 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { SprintifyIcon } from "@/components/ui/icons"
-import { loginUser, createUser, verifyUser, resetUserPasswordRequest, getUserById, resetUserPassword } from "../actions/userActions"
+import { loginUser, createUser, verifyUser, resetUserPasswordRequest, getUserById, resetUserPassword, getUserSession } from "../actions/userActions"
 import { useToast } from "@/components/context/ToastContext"
 import { GitHubLogoIcon } from "@radix-ui/react-icons"
 import { signIn } from 'next-auth/react'
 import Tooltip from "@/components/ui/tooltip"
 import { TooltipTrigger } from "@radix-ui/react-tooltip"
 import { getServerSession } from "next-auth"
+import { sleep } from "../lib/utils"
+import Loader from "@/components/ui/loader"
 
 function SubmitButton() {
   const { pending } = useFormStatus()
@@ -66,7 +68,21 @@ export default function Page() {
     [showToast],
   )
 
+  const handleGitHubSignIn = async () => {
+    showToast('info', 'Signing in with GitHub...', 5000)
+    await signIn('github')
+  }
+
   useEffect(() => {
+
+    const checkUserSession = async () => {
+      const session = await getUserSession()
+      if (session) {
+        router.push("/software")
+      }
+    }
+    checkUserSession()
+
     if (!userHasConfirmed) {
       const confirmUserId = searchParams.get("confirmUserId")
       if (confirmUserId) {
@@ -83,9 +99,8 @@ export default function Page() {
     }
 
     //GitHub auth
-    if (searchParams.get("githubAuthorize"))
-    {
-      router.push('/software')
+    if (searchParams.get("githubAuthorize")) {
+      router.push("/software")
     }
   }, [searchParams, handleConfirmUser, userHasConfirmed, handleResetPassword, passwordHasReset, router])
 
@@ -164,7 +179,7 @@ export default function Page() {
   }
 
   return (
-    <>
+    <Suspense fallback={<Loader/>}>
       <div className='absolute top-4 left-4'>
         <Link href='#' className='flex items-center justify-center' prefetch={false}>
           <SprintifyIcon className='w-10 h-10' />
@@ -201,7 +216,7 @@ export default function Page() {
                 </div>
                 <div className='flex items-center justify-center'>
                   <Tooltip content='Sign In with GitHub' className="bg-accent">
-                    <button onClick={() => signIn('github')}>
+                    <button onClick={handleGitHubSignIn}>
                       <GitHubLogoIcon className='w-8 h-8 text-primary/80 hover:text-accent hover:cursor-pointer' />
                     </button>
                   </Tooltip>
@@ -211,7 +226,7 @@ export default function Page() {
           )}
         </Card>
       </div>
-    </>
+    </Suspense>
   )
 }
 

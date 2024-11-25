@@ -184,6 +184,7 @@ export default function Page() {
                 src='/hero.png'
                 width={550}
                 height={550}
+                priority
                 alt='Hero'
                 className='mx-auto overflow-hidden sm:w-full lg:order-last'
               />

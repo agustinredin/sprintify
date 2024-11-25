@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button"
 import { FileIcon } from "@/components/ui/icons"
 
+
 export default function NotFound() {
   function handleClick() {
     window.history.back()
