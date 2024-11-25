@@ -27,7 +27,7 @@ import { IEmail } from "./lib/interfaces"
 
 export default function Page() {
   console.log('Sprintify landing page. Version of software: 0.1.0')
-  console.log('Last updated: 15.11.2024')
+  console.log('Last updated: 25.11.2024')
 
   const params = usePathname()
   if (params != null) {
