@@ -33,7 +33,8 @@ interface ReusableTooltipProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   children: React.ReactNode
   side?: "top" | "right" | "bottom" | "left"
   align?: "start" | "center" | "end"
-  delayDuration?: number
+  delayDuration?: number,
+  sideOffset?: number
 }
 
 export default function Component({
@@ -42,13 +43,14 @@ export default function Component({
   side = "top",
   align = "center",
   delayDuration = 200,
+  sideOffset = undefined,
   ...props
 }: ReusableTooltipProps) {
   return (
     <TooltipProvider>
       <Tooltip delayDuration={delayDuration}>
         <TooltipTrigger asChild>{children}</TooltipTrigger>
-        <TooltipContent side={side} align={align} {...props}>
+        <TooltipContent side={side} align={align} sideOffset={sideOffset} {...props}>
           {content}
         </TooltipContent>
       </Tooltip>

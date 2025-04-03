@@ -1,7 +1,7 @@
 "use server"
 import { hash, compare } from "bcryptjs"
 import { sql } from "@vercel/postgres"
-import { v4 as uuidv4 } from "uuid"
+import { v4  } from "uuid"
 import { cookies } from "next/headers"
 import { IEmail, IResponse, IUser, Strict } from "@/app/lib/interfaces"
 import ConfirmRegisterEmail from "@/components/custom/ConfirmRegisterEmail"
@@ -13,7 +13,7 @@ import { Account, Profile } from "next-auth"
 const userCookie = {
   name: "session",
   options: { httpOnly: true, secure: true, sameSite: "lax", path: "/" },
-  duration: 180000,
+  duration: 1800000,
 }
 
 export const getUserById = async (id: string) => {
@@ -24,9 +24,11 @@ export const getUserById = async (id: string) => {
 
 export const getUserByEmail = async (email: string) => {
   const data = await sql`SELECT * from users where email=${email}`
-  const result = data.rows[0] as IUser ?? null
+  const result = (data.rows[0] as IUser) ?? null
   return result
 }
+
+//eslint disable react-prop-types
 
 export const createUserSession = async (user: IUser) => {
   const expires = new Date(Date.now() + userCookie.duration)
@@ -40,10 +42,10 @@ export const createUserSession = async (user: IUser) => {
   })
 }
 
-export const getUserSession = async () => {
+export const getUserSession = async (): Promise<IUser | null> => {
   const userAsString = cookies().get(userCookie.name)?.value
   if (!userAsString) return null
-  const user = JSON.parse(userAsString)
+  const user = JSON.parse(userAsString) as IUser
   console.log("GET session for user:", user.id)
   return user
 }
@@ -114,8 +116,11 @@ export const createUser = async (formData: FormData): Promise<IResponse<string>>
       return { error: "All fields are required" }
     }
 
-    if(!isValidPassword(password)) {
-      return { error: "Password must be at least 8 characters long, contain at least one uppercase character, one lowercase character and a number."}
+    if (!isValidPassword(password)) {
+      return {
+        error:
+          "Password must be at least 8 characters long, contain at least one uppercase character, one lowercase character and a number.",
+      }
     }
 
     const selectQuery = await sql`
@@ -128,7 +133,7 @@ export const createUser = async (formData: FormData): Promise<IResponse<string>>
     }
 
     const hashedPassword = await hash(password || "", 10)
-    const id = uuidv4() // Generate a new UUID
+    const id = v4() // Generate a new UUID
     const insertQuery = await sql`
     INSERT INTO USERS (ID, name, email, password, role_id, admin_id, verified)
     VALUES (${id}, ${user}, ${email}, ${hashedPassword}, null, null, false)
@@ -167,12 +172,11 @@ export const createUser = async (formData: FormData): Promise<IResponse<string>>
 
 export const createOAuthUser = async (account: Strict<Profile>): Promise<IResponse<Boolean>> => {
   try {
-
     //oauth default password (wont be required)
     const { user, email, password } = {
       user: account.name,
       email: account.email,
-      password: `${account.name}__${account.email}__${account.sub}`
+      password: `${account.name}__${account.email}__${account.sub}`,
     }
 
     const selectQuery = await sql`SELECT * from USERS where email=${email}`
@@ -183,12 +187,12 @@ export const createOAuthUser = async (account: Strict<Profile>): Promise<IRespon
     if (selectResult && selectResult > 0) {
       return {
         response: true,
-        code: 'success'
+        code: "success",
       }
     }
 
     const hashedPassword = await hash(password || "", 10)
-    const id = uuidv4() // Generate a new UUID
+    const id = v4() // Generate a new UUID
     const insertQuery = await sql`
     INSERT INTO USERS (ID, name, email, password, role_id, admin_id, verified)
     VALUES (${id}, ${user}, ${email}, ${hashedPassword}, null, null, true)
@@ -256,7 +260,7 @@ export const resetUserPasswordRequest = async (email: string): Promise<IResponse
 
     return {
       code: "success",
-      response: "Reset password e-mail sent. Please, check your inbox."
+      response: "Reset password e-mail sent. Please, check your inbox.",
     }
   } catch (err) {
     console.log(err)
@@ -275,7 +279,6 @@ export const resetUserPassword = async (formData: FormData): Promise<IResponse<s
       newPasswordConfirm: formData.get("new-password-confirm")?.toString(),
     }
 
-    
     let mismatch = newPassword != newPasswordConfirm
     if (mismatch) {
       return {
@@ -284,13 +287,16 @@ export const resetUserPassword = async (formData: FormData): Promise<IResponse<s
       }
     }
 
-    if(!isValidPassword(newPassword ?? '')) {
-      return { error: "Password must be at least 8 characters long, contain at least one uppercase character, one lowercase character and a number."}
+    if (!isValidPassword(newPassword ?? "")) {
+      return {
+        error:
+          "Password must be at least 8 characters long, contain at least one uppercase character, one lowercase character and a number.",
+      }
     }
-    
+
     const hashedPassword = await hash(newPassword || "", 10)
     const updateQuery = sql`UPDATE users SET password = ${hashedPassword} WHERE email=${newPasswordEmail}`
-    
+
     return {
       response: "Password reset successfully. Now log in to your account.",
       code: "success",

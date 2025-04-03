@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import "@/app/globals.css"
 import { Bricolage_Grotesque } from "next/font/google"
 import { Inter } from "next/font/google"
-import { cn } from "@/app/lib/utils"
+import { cn, sleep } from "@/app/lib/utils"
 import { ToastProvider } from "@/components/context/ToastContext"
 import { Suspense } from "react"
 import Loader from "@/components/ui/loader"
@@ -28,13 +28,14 @@ export const metadata: Metadata = {
 }
 
 export default async function RootLayout({ children }: PropsWithChildren) {
-
   return (
     <html lang='en'>
       <body className={cn("antialiased", fontHeading.variable, fontBody.variable)}>
         <ToastProvider>
-          <Suspense fallback={<Loader />}>{children}</Suspense>
-        </ToastProvider>
+          <Suspense fallback={<Loader/>}>
+            {children}
+          </Suspense>
+          </ToastProvider>
       </body>
     </html>
   )

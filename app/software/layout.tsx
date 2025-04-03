@@ -41,7 +41,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <div className='flex flex-col sm:gap-4 p-4 sm:pl-20 sm:px-6 sm:py-0'>
           <ToastProvider>
             {/* <UserProvider session={OAuthSession}> */}
-              <Suspense fallback={<Loader />} />
               {children}
             {/* </UserProvider> */}
           </ToastProvider>

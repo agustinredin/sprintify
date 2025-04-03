@@ -14,11 +14,11 @@ import {
   SprintifyIcon,
 } from "@/components/ui/icons"
 
-const navItems = [
-  { href: "/software/project/1", icon: LayoutDashboardIcon, label: "Dashboard" },
-  { href: "/software/project/kanban", icon: KanbanIcon, label: "Kanban" },
-  { href: "/software/project/team", icon: TeamIcon, label: "Team" },
-  { href: "/software/settings", icon: SettingsIcon, label: "Settings" },
+const navItems: any[] = [
+  // { href: "/software/project/1", icon: LayoutDashboardIcon, label: "Dashboard" },
+  // { href: "/software/project/kanban", icon: KanbanIcon, label: "Kanban" },
+  // { href: "/software/project/team", icon: TeamIcon, label: "Team" },
+  // { href: "/software/settings", icon: SettingsIcon, label: "Settings" },
 ]
 
 const baseClassName = "flex w-full h-16 items-center justify-center transition-colors duration-75"

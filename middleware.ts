@@ -3,8 +3,7 @@ import { getUserSession } from "./app/actions/userActions"
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
-  
-  // Improved static file handling
+  //Improved static file handling
   if (
     pathname.startsWith('/_next') || // Next.js internal routes
     pathname.startsWith('/api') ||   // API routes
@@ -15,21 +14,21 @@ export async function middleware(req: NextRequest) {
   }
   
   // Protected routes check
-  const protectedRoutes = ["/software"]
-  const isProtectedRoute = protectedRoutes.some(route => 
-    pathname === route || pathname.startsWith(`${route}/`)
-  )
-  // const verified = await getUserSession()
+  // const protectedRoutes = ["/software"]
+  // const isProtectedRoute = protectedRoutes.some(route => 
+  //   pathname === route || pathname.startsWith(`${route}/`)
+  // )
+  // const user = await getUserSession()
 
-  // if (isProtectedRoute && !verified) {
+  // if (isProtectedRoute && !user) {
   //   return NextResponse.redirect(new URL("/signup", req.url))
   // }
-
-  // if (pathname.startsWith('/signup') && verified) {
+  
+  // if (pathname.startsWith('/signup') && user) {
   //   return NextResponse.redirect(new URL("/software", req.url))
   // }
 
-  return NextResponse.next()
+  // return NextResponse.next()
 }
 
 export const config = {

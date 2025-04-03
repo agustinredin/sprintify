@@ -4,7 +4,7 @@ import { Suspense, useCallback, useEffect, useState } from "react"
 import { useFormState, useFormStatus } from "react-dom"
 import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import { Button, SubmitButton } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -19,14 +19,6 @@ import { getServerSession } from "next-auth"
 import { sleep } from "../lib/utils"
 import Loader from "@/components/ui/loader"
 
-function SubmitButton() {
-  const { pending } = useFormStatus()
-  return (
-    <Button type='submit' disabled={pending} className='my-2 w-full'>
-      {pending ? "Submitting..." : "Submit"}
-    </Button>
-  )
-}
 
 type AuthView = "login" | "forgotPassword" | "resetPassword" | "register"
 
@@ -187,8 +179,9 @@ export default function Page() {
           <span className='sr-only'>Sprintify</span>
         </Link>
       </div>
-      <div className='h-screen flex items-center justify-center'>
+      <div className='flex items-center justify-center h-screen'>
         <Card className='w-full max-w-md mx-auto'>
+          <Card></Card>
           <CardHeader>
             <CardTitle>
               {view === "login"
@@ -209,7 +202,7 @@ export default function Page() {
           {(view === "register" || view == "login") && (
             <CardFooter className='space-y-4'>
               <div className='w-full'>
-                <div className='relative flex h-7 items-center justify-center gap-2 pb-2'>
+                <div className='relative flex items-center justify-center gap-2 pb-2 h-7'>
                   <div className='w-6 border-t border-yellow-darker dark:border-[#B9B9C6]'></div>
                   <span className='flex-shrink font-primary text-sm text-yellow-darker dark:text-[#B9B9C6]'>or</span>
                   <div className='w-6 border-t border-yellow-darker dark:border-[#B9B9C6]'></div>
@@ -250,7 +243,7 @@ function LoginForm({ dispatch, setView }: FormProps) {
         </div>
       </CardContent>
       <CardFooter className='flex flex-col px-6 py-4'>
-        <SubmitButton />
+        <SubmitButton  className='w-full my-2'/>
         <Button variant='link' onClick={() => setView("forgotPassword")}>
           Forgot Password?
         </Button>
@@ -275,7 +268,7 @@ function ForgotPasswordForm({ dispatch, setView }: FormProps) {
         </p>
       </CardContent>
       <CardFooter className='flex flex-col items-start gap-4'>
-        <SubmitButton />
+        <SubmitButton  className='w-full my-2'/>
         <Button variant='link' onClick={() => setView("login")}>
           Back to Login
         </Button>
@@ -302,7 +295,7 @@ function ResetPasswordForm({ dispatch, email = '' }: Omit<FormProps, "setView">)
         </div>
       </CardContent>
       <CardFooter className='flex flex-col'>
-        <SubmitButton />
+        <SubmitButton  className='w-full my-2'/>
       </CardFooter>
     </form>
   )
@@ -326,7 +319,7 @@ function RegisterForm({ dispatch, setView }: FormProps) {
         </div>
       </CardContent>
       <CardFooter className='flex flex-col'>
-        <SubmitButton />
+        <SubmitButton  className='w-full my-2'/>
         <Button variant='link' onClick={() => setView("login")}>
           Already have an account? Login
         </Button>

@@ -21,6 +21,28 @@ export interface IEmail {
     body: React.ReactNode | string
 }
 
+export interface IProject {
+    id: string,
+    name: string,
+    start_date: Date,
+    end_date: Date,
+    user_id: string
+}
+
 export type Strict<T> = {
     [P in keyof T]-?: NonNullable<T[P]>;
   };
+
+  export interface ITask {
+    id: number
+    name: string
+    description: string
+    priority: string
+    type: string
+    estimated_hours: number
+    sprint_id: number | null
+    project_id: string
+    status: string
+    assignee_id?: string
+  }
+  
