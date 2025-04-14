@@ -9,6 +9,9 @@ This project is a Scrum management tool built using Next.js 14, TypeScript (TSX)
 - **Projects:** Manage projects and their associated sprints.
 - **Sprints:** Create, update, and delete sprints within projects.
 - **Tasks:** Track tasks associated with sprints.
+
+### Pending
+
 - **Backlogs:** Maintain a backlog of tasks for each project.
 - **Users:** Manage users and their roles within projects.
 
