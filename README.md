@@ -28,7 +28,6 @@ Getting Started
 ### Prerequisites
 
 -   Node.js installed on your machine
--   MongoDB database setup
 
 ### Installation
 
@@ -48,10 +47,7 @@ Getting Started
 - Set up environment variables:
 
   1. Create a .env file in the root directory 
-  2. Add MongoDB connection string
-
- 
-  `MONGODB_URI=your_mongodb_connection_string`
+  2. Add a PostgreSQL connection string
 
 
 - Run the development server:
