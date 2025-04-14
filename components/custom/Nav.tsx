@@ -30,29 +30,30 @@ export default function Nav() {
   const pathname = usePathname()
 
   return (
-    <aside className='fixed inset-y-0 left-0 z-10 hidden w-16 flex-col border-r bg-background sm:flex'>
-      <nav className='flex flex-col items-center'>
-        <Tooltip content='Sprintify' side='right'>
-          <Link
-            href='/software'
-            className='group flex h-16 w-16 shrink-0 items-center justify-center gap-2 rounded-full bg-muted text-muted-foreground text-lg font-semibold md:h-12 md:w-12 md:text-base my-4'
-            prefetch={false}>
-            <SprintifyIcon className='h-8 w-8 transition-all group-hover:scale-110' />
-            <span className='sr-only'>Sprintify</span>
-          </Link>
-        </Tooltip>
-        {navItems.map((item) => (
-          <Tooltip key={item.href} content={item.label} side='right'>
-            <Link
-              href={item.href}
-              className={`${baseClassName} ${pathname === item.href ? activeClassName : inactiveClassName}`}
-              prefetch={false}>
-              <item.icon className='h-6 w-6' />
-              <span className='sr-only'>{item.label}</span>
-            </Link>
-          </Tooltip>
-        ))}
-      </nav>
-    </aside>
+    null
+    // <aside className='fixed inset-y-0 left-0 z-10 hidden w-16 flex-col border-r bg-background sm:flex'>
+    //   <nav className='flex flex-col items-center'>
+    //     <Tooltip content='Sprintify' side='right'>
+    //       <Link
+    //         href='/software'
+    //         className='group flex h-16 w-16 shrink-0 items-center justify-center gap-2 rounded-full bg-muted text-muted-foreground text-lg font-semibold md:h-12 md:w-12 md:text-base my-4'
+    //         prefetch={false}>
+    //         <SprintifyIcon className='h-8 w-8 transition-all group-hover:scale-110' />
+    //         <span className='sr-only'>Sprintify</span>
+    //       </Link>
+    //     </Tooltip>
+    //     {navItems.map((item) => (
+    //       <Tooltip key={item.href} content={item.label} side='right'>
+    //         <Link
+    //           href={item.href}
+    //           className={`${baseClassName} ${pathname === item.href ? activeClassName : inactiveClassName}`}
+    //           prefetch={false}>
+    //           <item.icon className='h-6 w-6' />
+    //           <span className='sr-only'>{item.label}</span>
+    //         </Link>
+    //       </Tooltip>
+    //     ))}
+    //   </nav>
+    // </aside>
   )
 }

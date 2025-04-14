@@ -18,6 +18,9 @@ const nextConfig = {
       isrMemoryCacheSize: 0,
       // Disable React Server Components caching
       serverComponentsExternalPackages: [],
+        // This disables static generation for all pages
+        // Use with caution as it impacts performance
+        disableStaticGeneration: true,
     },
     // Disable static generation caching
     generateEtags: false,

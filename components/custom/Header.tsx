@@ -25,34 +25,44 @@ import {
 import NavSheet from "./NavSheet";
 import { deleteUserSession } from "@/app/actions/userActions";
 import { useRouter } from "next/navigation";
+import { ArrowLeftIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export default function Header() {
+  const router = useRouter();
+  const [canGoBack, setCanGoBack] = useState(false);
 
-  const router = useRouter()
+  useEffect(() => {
+    // Check if there is a previous history entry
+    setCanGoBack(window.history.length > 1);
+  }, []);
 
   const handleLogout = async () => {
-    await deleteUserSession()
-     router.push('/signup')
-  }
+    await deleteUserSession();
+    router.push('/signup');
+  };
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b px-4 sm:pl-20 sm:static sm:py-4 sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
+    <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b px-4 sm:px-12 sm:static sm:py-4 sm:h-auto sm:border-0 sm:bg-transparent">
       <NavSheet />
       <div className="flex justify-between flex-1 items-center">
-        <div>
+        <Link href='/software'>
           <h1 className="hidden md:block text-3xl font-bold tracking-tight text-accent">
             Sprintify
           </h1>
           <span className="sr-only">Sprintify</span>
-        </div>
-        <div className="flex items-center relative ml-auto flex-1 md:grow-0">
-          <SearchIcon className="absolute left-3 top-4 h-4 w-4 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Search..."
-            className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-          />
-        </div>
+        </Link>
+        {/* {canGoBack && (
+          <div className="mr-auto ml-8 flex-1 md:grow-0">
+            <div
+              className="flex items-center cursor-pointer w-24"
+              onClick={() => router.back()}
+            >
+              <ArrowLeftIcon className="h-4 w-4 text-muted-foreground" />
+              <span className="text-muted-foreground grow pl-2">Go Back</span>
+            </div>
+          </div>
+        )} */}
       </div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -72,12 +82,7 @@ export default function Header() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>Settings</DropdownMenuItem>
-          <DropdownMenuItem>Notifications</DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem  onClick={() => handleLogout()}>Logout</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleLogout()}>Logout</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </header>

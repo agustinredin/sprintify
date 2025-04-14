@@ -38,7 +38,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <Header />
       <Nav />
       <main className='flex min-h-screen w-full flex-col'>
-        <div className='flex flex-col sm:gap-4 p-4 sm:pl-20 sm:px-6 sm:py-0'>
+        <div className='flex flex-col sm:gap-4 p-4 sm:px-12 sm:py-0'>
           <ToastProvider>
             {/* <UserProvider session={OAuthSession}> */}
               {children}

@@ -13,7 +13,7 @@ import { Account, Profile } from "next-auth"
 const userCookie = {
   name: "session",
   options: { httpOnly: true, secure: true, sameSite: "lax", path: "/" },
-  duration: 1800000,
+  duration: 18000000,
 }
 
 export const getUserById = async (id: string) => {
@@ -150,7 +150,6 @@ export const createUser = async (formData: FormData): Promise<IResponse<string>>
 
     const emailResponse = await sendEmail(confirmRegisterRequest)
     if (emailResponse?.error) {
-      console.log(emailResponse?.error)
       return {
         code: "error",
         error: "Error sending e-mail confirmation. Refresh or try again later.",
@@ -162,7 +161,6 @@ export const createUser = async (formData: FormData): Promise<IResponse<string>>
       code: "success",
     }
   } catch (err) {
-    console.log(err)
     return {
       code: "error",
       error: "Error creating user. Refresh or try again later.",
@@ -203,7 +201,6 @@ export const createOAuthUser = async (account: Strict<Profile>): Promise<IRespon
       code: "success",
     }
   } catch (err) {
-    console.log(err)
     return {
       code: "error",
       error: "Error creating user from OAuth. Refresh or try again later.",
@@ -251,7 +248,6 @@ export const resetUserPasswordRequest = async (email: string): Promise<IResponse
 
     const emailResponse = await sendEmail(confirmRegisterRequest)
     if (emailResponse?.error) {
-      console.log(emailResponse?.error)
       return {
         code: "error",
         error: "Error sending password reset e-mail. Refresh or try again later.",
@@ -263,7 +259,6 @@ export const resetUserPasswordRequest = async (email: string): Promise<IResponse
       response: "Reset password e-mail sent. Please, check your inbox.",
     }
   } catch (err) {
-    console.log(err)
     return {
       code: "error",
       error: "An error occured attempting to send your reset password E-mail. Refresh or try again later.",

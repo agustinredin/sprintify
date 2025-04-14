@@ -7,16 +7,14 @@ import { getTasksByProjectId } from "@/app/actions/taskActions"
 
 interface ProjectPageProps {
   params: {
-    id: string
+    projectId: string
   }
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
-  const projectId = params.id
-
+  const projectId = params.projectId
   // Fetch project data
   const projectResult = await getProjectById(projectId)
-
   if (!projectResult.response || projectResult.code === "error") {
     notFound()
   }
