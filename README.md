@@ -9,6 +9,9 @@ This project is a Scrum management tool built using Next.js 14, TypeScript (TSX)
 - **Projects:** Manage projects and their associated sprints.
 - **Sprints:** Create, update, and delete sprints within projects.
 - **Tasks:** Track tasks associated with sprints.
+
+### Pending
+
 - **Backlogs:** Maintain a backlog of tasks for each project.
 - **Users:** Manage users and their roles within projects.
 
@@ -25,7 +28,6 @@ Getting Started
 ### Prerequisites
 
 -   Node.js installed on your machine
--   MongoDB database setup
 
 ### Installation
 
@@ -45,10 +47,7 @@ Getting Started
 - Set up environment variables:
 
   1. Create a .env file in the root directory 
-  2. Add MongoDB connection string
-
- 
-  `MONGODB_URI=your_mongodb_connection_string`
+  2. Add a PostgreSQL connection string
 
 
 - Run the development server:
